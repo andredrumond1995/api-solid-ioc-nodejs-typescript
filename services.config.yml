@@ -1,0 +1,36 @@
+version: "3.3"
+services:
+  test_db_mysql:
+    container_name: test-db-mysql-cnt
+    build:
+      context: "./"
+      dockerfile: mysql.dockerfile
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+    restart: always
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    networks:
+      - prod-ntw
+
+  test_php_my_admin:
+    container_name: test-php-my-admin-cnt
+    build:
+      context: "./"
+      dockerfile: phpmyadmin.dockerfile
+    environment:
+      PMA_HOST: test-db-mysql-cnt
+    restart: always
+    expose:
+      - "3307"
+    ports:
+      - "3307:80"
+    networks:
+      - prod-ntw
+
+networks:
+  prod-ntw:
+    external: true
